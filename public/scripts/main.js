@@ -20,14 +20,27 @@ const initDial = (id, { percantage, unit }) => {
   dial.classList.add("p" + percantage);
 };
 
-const updateDial = (id, { percantage, unit }) => {
+const updateDial = (id, { percantage, unit, dataShown }) => {
+  if (dataShown == undefined) {
+    dataShown = percantage;
+  }
+  if (percantage > 100) {
+    return;
+  }
   const dial = document.getElementById(id);
   if (dial == null) {
     return;
   }
   const span = dial.querySelector("span");
   if (span) {
-    span.innerText = percantage + unit;
+    span.innerText = dataShown + unit;
+  }
+  if (percantage < 50) {
+    dial.classList.add("green");
+  } else if (percantage > 50) {
+    dial.classList.add("orange");
+  } else if (percantage > 80) {
+    dial.classList.add("red");
   }
 
   dial.classList.remove("p" + dial.classList[1].substring(1));
@@ -37,6 +50,7 @@ const load = () => {
   initDial("temp", { percantage: 0, unit: "°C" }, "large", "red");
   initDial("ram", { percantage: 0, unit: "%" });
   getStatus();
+  setInterval(getStatus, 1000);
 };
 
 const getStatus = () => {
@@ -47,8 +61,10 @@ const getStatus = () => {
       if (data.temp.max == undefined) {
         return;
       }
+      const tempPercent = (data.temp.max / 80) * 100;
       updateDial("temp", {
-        percantage: parseFloat(data.temp.max).toFixed(2),
+        percantage: tempPercent,
+        dataShown: parseFloat(data.temp.max).toFixed(2),
         unit: "°C",
       });
       const ramPercent = (data.memory.used / data.memory.total) * 100;
@@ -57,7 +73,19 @@ const getStatus = () => {
       }
       updateDial("ram", {
         percantage: parseFloat(ramPercent).toFixed(2),
-        unit: "%",
+        unit: "",
+        dataShown: formatBytes(data.memory.used),
       });
     });
 };
+function formatBytes(bytes, decimals = 0) {
+  if (!+bytes) return "0 Bytes";
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}

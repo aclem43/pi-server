@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pi Server</title>
-</head>
-<body>
-    <div>
-        
+    <script src="scripts/main.js"></script>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/circle.css" />
+  </head>
+  <body onload="load()">
+    <div class="nav">
+      <div class="navTitle">PI Server</div>
+      <div class="">
+        <div class="navitem">Test</div>
+      </div>
+      <div class="navitem">github</div>
     </div>
-</body>
+    <div style="display: flex">
+      <div></div>
+      <div style="display: flex; flex-direction: column">
+        <h3 style="text-align: center">Temperature</h3>
+        <div id="temp"></div>
+        <h3 style="text-align: center">Ram Usage</h3>
+        <div id="ram"></div>
+      </div>
+    </div>
+  </body>
 </html>
